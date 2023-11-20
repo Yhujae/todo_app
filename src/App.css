@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  max-width: 600px;
+  max-width: 700px;
   margin: 50px auto;
   background-color: #fff;
   padding: 20px;
@@ -17,8 +17,13 @@ body {
 h1,
 h2 {
   color: #333;
-  font-family: monospace;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
 }
+
+/* h1 {
+  text-shadow: 0 5px 3px rgba(126, 135, 136, 0.5);
+} */
 
 #task {
   display: flex;
@@ -29,43 +34,52 @@ h2 {
 #message {
   color: red;
   font-size: 14px;
-  margin-top: -5px;
+  margin-top: -15px;
 }
 
 #delete {
-  background-color: rgb(255, 72, 0);
+  background-color: rgb(230, 81, 23);
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
 #delete:hover {
-  background-color: rgb(228, 72, 11);
+  background-color: rgb(255, 72, 0);
 }
 
 #clear {
   justify-content: right;
-  color: #333;
-  background-color: #ccc;
+  color: #000;
+  background-color: #efebeb;
   font-weight: bold;
-  margin-top: 10px;
-  width: 300px;
+  margin-top: 25px;
+  width: 250px;
   padding: 10px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 #clear:hover {
-  background-color: rgb(171, 170, 170);
+  background-color: rgb(204, 199, 199);
 }
 
 div {
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 input {
+  width: 200px;
   padding: 8px;
   border-radius: 5px;
+  border: 1px solid rgb(228, 228, 228);
   font-size: 16px;
+  box-shadow: 0 2px 5px rgba(126, 135, 136, 0.5);
+  outline: none;
+  margin-bottom: 15px;
+}
+
+input:focus {
+  border-color: #e4e7e8;
 }
 
 button {
@@ -74,17 +88,19 @@ button {
   cursor: pointer;
   border-radius: 5px;
   background-color: #4caf50;
+  box-shadow: 0 2px 2px rgba(126, 135, 136, 0.5);
   color: #fff;
   border: none;
   margin: 5px;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #49c14d;
 }
 
 ul {
   display: grid;
+  justify-content: space-around;
   place-items: center;
   list-style-type: none;
   padding: 0;
@@ -94,13 +110,13 @@ li {
   width: 200px;
   padding: 10px;
   display: flex;
-  justify-content: space-between;
   align-items: left;
+  margin-right: 2rem;
 }
 
 h3 {
   font-size: 14px;
-  margin-left: 10px;
+  margin-left: 15px;
   color: #888;
 }
 

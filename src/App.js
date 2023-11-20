@@ -46,12 +46,12 @@ function App() {
       setCurrentTask("");
       // Set showMessage to null when task is added
       setShowMessage(null);
-      // Show "Clear All" button when tasks are above 5
-      setShowClearAll(todoList.length + 1 > 5);
+      // Show "Clear All" button when tasks are above 3
+      setShowClearAll(todoList.length + 1 >= 4);
     } else {
       setShowMessage({
         type: "error",
-        text: "Please enter a task before adding",
+        text: "Please enter a task before adding.",
       });
     }
   };
@@ -63,25 +63,30 @@ function App() {
         return task.task !== taskToDelete;
       })
     );
-    // Hide "Clear All" button when tasks are less than or equal to 5
-    setShowClearAll(todoList.length > 5);
+    // Hide "Clear All" button when tasks are less than or equal to 4
+    setShowClearAll(todoList.length > 4);
   };
 
   const completeTask = (taskToComplete) => {
-    // Update the todo list by mapping over tasks
-    setTodoList(
-      todoList.map((task) => {
-        return task.task === taskToComplete
-          ? { task: taskToComplete, completed: !task.completed }
-          : task;
-      })
-    );
-    // Set the completed task state
-    setCompletedTask(taskToComplete);
-    // Set the showModal state to true
-    setShowModal(true);
-    // Show "Clear All" button when tasks are above 6
-    setShowClearAll(todoList.length + 1 > 6);
+    // Find the task that is being completed
+    const task = todoList.find((task) => task.task === taskToComplete);
+
+    // Check if the task is being completed
+    if (task) {
+      // Update the todo list by mapping over tasks
+      setTodoList(
+        todoList.map((task) =>
+          task.task === taskToComplete
+            ? { ...task, completed: !task.completed }
+            : task
+        )
+      );
+      // Set the completed task state only if the task is completed
+      if (!task.completed) {
+        setCompletedTask(taskToComplete);
+        setShowModal(true);
+      }
+    }
   };
 
   const closeModal = () => {
@@ -90,14 +95,22 @@ function App() {
   };
 
   const clearAll = () => {
+    setShowModal(true);
+  };
+
+  const confirmClearAll = () => {
     setTodoList([]);
-    setShowMessage(null);
     setShowClearAll(false);
+    setShowModal(false);
+  };
+
+  const cancelClearAll = () => {
+    setShowModal(false);
   };
 
   return (
     <div className="App">
-      <h1>MY TODO LIST</h1>
+      <h1>TODO LIST</h1>
       <div className="date">{currentDate}</div>
       <div>
         <input
@@ -118,7 +131,7 @@ function App() {
 
       {showMessage && (
         <div id="message" className={showMessage.type}>
-          <p>* {showMessage.text} *</p>
+          <p> {showMessage.text} </p>
         </div>
       )}
       <hr />
@@ -128,7 +141,7 @@ function App() {
           <div id="task" key={index}>
             <li>{value.task}</li>
             <button onClick={() => completeTask(value.task)}>
-              {value.completed ? "Undo" : "Completed"}
+              {value.completed ? "Undo" : "Complete"}
             </button>
             <button id="delete" onClick={() => deleteTask(value.task)}>
               Delete
@@ -147,23 +160,35 @@ function App() {
           </div>
         ))}
       </ul>
-
       {showClearAll && (
         <button id="clear" onClick={clearAll}>
-          Clear All
+          Clear All Tasks
         </button>
       )}
 
       {showModal && (
         <div className="modal">
           <div className="modal-content">
-            <h2>
-              Task "{completedTask}"{" "}
-              {todoList.find((task) => task.task === completedTask)?.completed
-                ? "Completed"
-                : "Not Completed"}
-            </h2>
-            <button onClick={closeModal}>Close</button>
+            {/* Conditional rendering based on the presence of completedTask */}
+            {completedTask ? (
+              <h2>
+                Task "{completedTask}"{" "}
+                {todoList.find((task) => task.task === completedTask)?.completed
+                  ? "Completed"
+                  : "Not Completed"}
+              </h2>
+            ) : (
+              <h2>Are you sure you want to clear all tasks?</h2>
+            )}
+            {/* Conditional rendering of buttons based on the presence of completedTask */}
+            {completedTask ? (
+              <button onClick={closeModal}>Close</button>
+            ) : (
+              <>
+                <button onClick={confirmClearAll}>Yes</button>
+                <button onClick={cancelClearAll}>Cancel</button>
+              </>
+            )}
           </div>
         </div>
       )}
