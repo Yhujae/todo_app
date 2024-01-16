@@ -3,6 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import "./App.css";
 
+// Define the getFormattedDate function before using it
+function getFormattedDate() {
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return new Date().toLocaleDateString(undefined, options);
+}
+
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [currentTask, setCurrentTask] = useState("");
@@ -13,8 +24,8 @@ function App() {
   const [showClearAll, setShowClearAll] = useState(false);
   const inputTask = useRef(null);
 
+  // Update the current date every day at midnight
   useEffect(() => {
-    // Update the current date every day at midnight
     const interval = setInterval(
       () => {
         setCurrentDate(getFormattedDate());
@@ -24,17 +35,6 @@ function App() {
 
     return () => clearInterval(interval);
   }, []);
-
-  // Define the getFormattedDate function before using it
-  function getFormattedDate() {
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    return new Date().toLocaleDateString(undefined, options);
-  }
 
   const addTask = () => {
     if (currentTask.trim() !== "") {
@@ -46,8 +46,8 @@ function App() {
       setCurrentTask("");
       // Set showMessage to null when task is added
       setShowMessage(null);
-      // Show "Clear All" button when tasks are above 3
-      setShowClearAll(todoList.length + 1 >= 4);
+      // Show "Clear All" button when tasks are 2 and above
+      setShowClearAll(todoList.length + 1 >= 2);
     } else {
       setShowMessage({
         type: "error",
@@ -109,17 +109,17 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className='App'>
       <h1>TODO LIST</h1>
-      <div className="date">{currentDate}</div>
+      <div className='date'>{currentDate}</div>
       <div>
         <input
           ref={inputTask}
-          type="text"
-          placeholder="Task..."
+          type='text'
+          placeholder='Task...'
           // Event handler for adding a task on pressing Enter
           onKeyDown={(event) => {
-            if (event.keyCode === 13) addTask();
+            if (event.key === "Enter") addTask();
           }}
           // Event handler for updating the current task
           onChange={(event) => {
@@ -129,50 +129,56 @@ function App() {
         <button onClick={addTask}>Add Task</button>
       </div>
 
+      {/* Display Messages */}
       {showMessage && (
-        <div id="message" className={showMessage.type}>
+        <div id='message' className={showMessage.type}>
           <p> {showMessage.text} </p>
         </div>
       )}
       <hr />
 
+      {/* Task List */}
       <ul>
         {todoList.map((value, index) => (
-          <div id="task" key={index}>
+          <div id='task' key={index}>
             <li>{value.task}</li>
             <button onClick={() => completeTask(value.task)}>
+              {/* Button text based on completion status */}
               {value.completed ? "Undo" : "Complete"}
             </button>
-            <button id="delete" onClick={() => deleteTask(value.task)}>
+            <button id='delete' onClick={() => deleteTask(value.task)}>
               Delete
             </button>
             {/* Displaying whether the task is completed or not */}
             {value.completed ? (
-              <h3 id="complete">Task Completed</h3>
+              <h3 id='complete'>Task Completed</h3>
             ) : (
               <h3>Task not Completed</h3>
             )}
             {value.completed && (
-              <span className="icon">
+              <span className='icon'>
                 <FontAwesomeIcon icon={faCheck} />
               </span>
             )}
           </div>
         ))}
       </ul>
+
+      {/* Clear All Button */}
       {showClearAll && (
-        <button id="clear" onClick={clearAll}>
+        <button id='clear' onClick={clearAll}>
           Clear All Tasks
         </button>
       )}
 
+      {/* Modal for Confirmations */}
       {showModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className='modal'>
+          <div className='modal-content'>
             {/* Conditional rendering based on the presence of completedTask */}
             {completedTask ? (
               <h2>
-                Task "{completedTask}"{" "}
+                Task '{completedTask}'{" "}
                 {todoList.find((task) => task.task === completedTask)?.completed
                   ? "Completed"
                   : "Not Completed"}
@@ -182,7 +188,7 @@ function App() {
             )}
             {/* Conditional rendering of buttons based on the presence of completedTask */}
             {completedTask ? (
-              <button onClick={closeModal}>Close</button>
+              <button onClick={closeModal}>Ok</button>
             ) : (
               <>
                 <button onClick={confirmClearAll}>Yes</button>
